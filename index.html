@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Crispwall: sharp wallpapers for your exact screen</title>
+    <meta name="description" content="Turn any picture into a sharp wallpaper sized for your phone or computer. The AI runs on your device, so your picture is never uploaded. Free, no account, no limits." />
+    <meta name="theme-color" content="#EEF1F5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0F1218" media="(prefers-color-scheme: dark)" />
+    <meta property="og:title" content="Crispwall" />
+    <meta property="og:description" content="Turn any picture into a sharp wallpaper for your exact screen. Runs on your device. Free, no limits." />
+    <meta property="og:image" content="social-preview.png" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  </head>
+  <body>
+    <header class="top">
+      <a class="mark" href="./" aria-label="Crispwall home"><span class="mark-dot" aria-hidden="true"></span>Crispwall</a>
+      <a class="top-link" href="https://github.com/atuuuuuuu/crispwall">Source on GitHub</a>
+    </header>
+
+    <main>
+      <section class="intro">
+        <h1>Make any picture a sharp wallpaper for your screen.</h1>
+        <p class="lede">Pick a photo. Crispwall sizes it for your exact phone or computer and uses AI to fill in the detail a small picture is missing. The AI runs on your own device, so the picture never leaves it.</p>
+      </section>
+
+      <section class="tool" aria-label="Wallpaper maker">
+        <div class="stage" id="stage">
+          <label class="drop" id="drop" for="file">
+            <input id="file" type="file" accept="image/*" />
+            <span class="drop-title">Drop a picture here</span>
+            <span class="drop-sub">or click to choose one. JPG, PNG, HEIC or WebP.</span>
+          </label>
+          <div class="frame" id="frame" hidden>
+            <canvas id="preview" aria-label="Wallpaper preview. Drag to move the picture."></canvas>
+            <div class="overlay" id="overlay" aria-hidden="true">
+              <span class="island"></span>
+              <span class="clock"><span class="clock-date"></span><span class="clock-time">9:41</span></span>
+              <span class="menubar"><span class="notch"></span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls" id="controls" hidden>
+          <label class="field">
+            <span>Screen</span>
+            <select id="screen"></select>
+          </label>
+          <label class="check"><input id="show-overlay" type="checkbox" checked /> Show clock and notch</label>
+          <p class="hint" id="hint">Drag the picture to choose what's in view.</p>
+          <button class="primary" id="make" type="button">Make it sharp</button>
+          <p class="status" id="status" role="status" aria-live="polite"></p>
+          <div class="result" id="result" hidden>
+            <div class="actions">
+              <a class="primary" id="download" href="#" download>Download wallpaper</a>
+              <button class="secondary" id="share" type="button" hidden>Share or save to Photos</button>
+              <button class="secondary" id="again" type="button">Use another picture</button>
+            </div>
+            <figure class="compare" id="compare">
+              <div class="compare-box">
+                <canvas id="before"></canvas>
+                <canvas id="after"></canvas>
+                <input id="split" type="range" min="0" max="100" value="50" aria-label="Move the line to compare before and after" />
+                <span class="split-line" aria-hidden="true"></span>
+              </div>
+              <figcaption><span>Normal resize</span><span>Crispwall</span></figcaption>
+            </figure>
+            <details class="howto">
+              <summary>How to set it as your wallpaper</summary>
+              <p><b>iPhone:</b> tap Share or save to Photos, then Save Image. Open Photos, tap the picture, tap Share, then Use as Wallpaper.</p>
+              <p><b>Android:</b> download it, open it in Photos or Gallery, tap the menu and choose Set as wallpaper.</p>
+              <p><b>Mac:</b> download it, then right-click the file in Finder and choose Set Desktop Picture.</p>
+              <p><b>Windows:</b> download it, then right-click the file and choose Set as desktop background.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="notes">
+        <h2>Why your wallpapers look blurry</h2>
+        <p>A phone or laptop screen has more pixels than most pictures online. Set a 1000-pixel picture on a 2560-pixel MacBook screen and the computer stretches it, and stretching makes it soft. Crispwall uses an AI model called Real-ESRGAN that was trained to rebuild edges and texture, then resizes the result to the exact pixel size of your screen.</p>
+        <h2>Nothing is uploaded</h2>
+        <p>Most "free" upscalers send your photo to their server and limit you to a few a day. Crispwall downloads a 5 MB model once and runs it in your browser, on your graphics chip when it can. The page isn't allowed to send data anywhere: its security policy blocks every connection except to this site. No account, no watermark, no limit.</p>
+        <h2>When it can't help</h2>
+        <p>The AI can sharpen and clean up, but it can't invent a face that isn't there. Very small pictures (less than a quarter of your screen's width) will still look soft, and Crispwall tells you when that's the case.</p>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <p>Made by <a href="https://github.com/atuuuuuuu">atu</a>. Free and open source under the MIT license. Real-ESRGAN by Xintao Wang et al., BSD 3-Clause.</p>
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
