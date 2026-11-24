@@ -1,7 +1,7 @@
 import './style.css'
 import { cropFor, fileName, plan, type Rect } from './fit'
 import { SCREENS, type Screen, thisScreen } from './screens'
-import type { UpscaleMessage, UpscaleRequest } from './upscale.worker'
+import type { UpscaleMessage, UpscaleRequest, WarmRequest } from './upscale.worker'
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T
 const drop = $<HTMLLabelElement>('drop')
@@ -60,6 +60,7 @@ async function open(file: File) {
     )
     return
   }
+  getWorker().postMessage({ warm: true, base: import.meta.env.BASE_URL } satisfies WarmRequest)
   focus = { x: 0.5, y: 0.5 }
   drop.hidden = true
   frame.hidden = false
@@ -192,8 +193,10 @@ function resize(
 }
 
 let worker: Worker | undefined
+const getWorker = (): Worker =>
+  (worker ??= new Worker(new URL('./upscale.worker.ts', import.meta.url), { type: 'module' }))
 function upscale(pixels: ImageData): Promise<ImageData> {
-  worker ??= new Worker(new URL('./upscale.worker.ts', import.meta.url), { type: 'module' })
+  getWorker()
   return new Promise((resolve, reject) => {
     worker!.onmessage = (e: MessageEvent<UpscaleMessage>) => {
       const m = e.data

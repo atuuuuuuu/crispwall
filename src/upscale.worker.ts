@@ -9,6 +9,8 @@ export type UpscaleRequest = {
   height: number
   base: string
 }
+/** Sent when a picture is opened, so the model downloads while the user is still framing it. */
+export type WarmRequest = { warm: true; base: string }
 export type UpscaleMessage =
   | { type: 'progress'; done: number; total: number; device: 'gpu' | 'cpu' }
   | {
@@ -46,7 +48,11 @@ async function load(base: string) {
   return session
 }
 
-self.onmessage = async (e: MessageEvent<UpscaleRequest>) => {
+self.onmessage = async (e: MessageEvent<UpscaleRequest | WarmRequest>) => {
+  if ('warm' in e.data) {
+    load(e.data.base).catch(() => {}) // a real run reports any error
+    return
+  }
   try {
     const { pixels, width, height, base } = e.data
     const { run, device } = await load(base)
