@@ -43,6 +43,13 @@ export const SCREENS: Screen[] = [
   { id: 'macbook-pro-16', name: 'MacBook Pro 16"', width: 3456, height: 2234, overlay: 'macbook' },
   { id: 'imac-24', name: 'iMac 24"', width: 4480, height: 2520, overlay: 'none' },
   { id: 'studio-display', name: 'Studio Display, 5K', width: 5120, height: 2880, overlay: 'none' },
+  {
+    id: 'pro-display-xdr',
+    name: 'Pro Display XDR, 6K',
+    width: 6016,
+    height: 3384,
+    overlay: 'none',
+  },
   { id: 'fhd', name: '1080p monitor', width: 1920, height: 1080, overlay: 'none' },
   { id: 'qhd', name: '1440p monitor', width: 2560, height: 1440, overlay: 'none' },
   { id: '4k', name: '4K monitor', width: 3840, height: 2160, overlay: 'none' },
