@@ -23,29 +23,36 @@ export type UpscaleMessage =
   | { type: 'error'; message: string }
 
 const SCALE = 4
-let session: { run: ort.InferenceSession; device: 'gpu' | 'cpu' } | undefined
+type Session = { run: ort.InferenceSession; device: 'gpu' | 'cpu' }
+// One shared load: the preload and the first real run must not each create a session.
+let session: Promise<Session> | undefined
 
-async function load(base: string) {
-  if (session) return session
+function load(base: string): Promise<Session> {
+  session ??= create(base)
+  session.catch(() => {
+    session = undefined // let the next attempt try again
+  })
+  return session
+}
+
+async function create(base: string): Promise<Session> {
   // GitHub Pages can't send the headers threads need, so stay single-threaded.
   ort.env.wasm.numThreads = 1
   const model = `${base}models/realesr-general-x4v3.onnx`
   if ('gpu' in navigator) {
     try {
-      session = {
+      return {
         run: await ort.InferenceSession.create(model, { executionProviders: ['webgpu'] }),
         device: 'gpu',
       }
-      return session
     } catch {
       // Some GPUs or browsers expose WebGPU but can't run every layer. The CPU path is slower but always works.
     }
   }
-  session = {
+  return {
     run: await ort.InferenceSession.create(model, { executionProviders: ['wasm'] }),
     device: 'cpu',
   }
-  return session
 }
 
 self.onmessage = async (e: MessageEvent<UpscaleRequest | WarmRequest>) => {
